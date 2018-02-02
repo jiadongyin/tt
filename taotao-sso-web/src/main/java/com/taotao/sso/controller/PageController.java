@@ -15,11 +15,11 @@ import org.springframework.web.bind.annotation.RequestMapping;
 @Controller
 public class PageController {
 
-	@RequestMapping("/page/register")
+	@RequestMapping("/page/showRegister")
 	public String showRegister() throws Exception {
 		return "register";
 	}
-	@RequestMapping("/page/login")
+	@RequestMapping("/page/showLogin")
 	public String showLogin(String redirect, Model model) throws Exception {
 		model.addAttribute("redirect", redirect);
 		return "login";

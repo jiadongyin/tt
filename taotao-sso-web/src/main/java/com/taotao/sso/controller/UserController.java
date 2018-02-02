@@ -15,6 +15,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.taotao.common.pojo.TaotaoResult;
 import com.taotao.common.utils.CookieUtils;
+import com.taotao.common.utils.ExceptionUtil;
 import com.taotao.pojo.TbUser;
 import com.taotao.sso.service.UserLoginService;
 import com.taotao.sso.service.UserRegisterService;
@@ -95,12 +96,30 @@ public class UserController {
 		return result;
 	}
 	
+	
+	
+	//退出登录
 	@RequestMapping(value="/user/logout/{token}")
 	@ResponseBody
-	public Object userLogout(@PathVariable String token) {
-		TaotaoResult result = userLoginService.logout(token);
-		return result;
-	}
+		public Object userLogout(@PathVariable String token, String callback) {
+			TaotaoResult result = null;
+			try {
+				result = userLoginService.logout(token);
+			} catch (Exception e) {
+				e.printStackTrace();
+				result = TaotaoResult.build(500, ExceptionUtil.getStackTrace(e));
+			}
+			
+
+			if (StringUtils.isBlank(callback)) {
+				return result;
+			} else {
+				MappingJacksonValue mappingJacksonValue = new MappingJacksonValue(
+						result);
+				mappingJacksonValue.setJsonpFunction(callback);
+				return mappingJacksonValue;
+			}
+		}
 	
 	
 	
