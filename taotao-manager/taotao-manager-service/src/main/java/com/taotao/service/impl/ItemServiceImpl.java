@@ -9,7 +9,9 @@ import javax.jms.Message;
 import javax.jms.Session;
 import javax.jms.TextMessage;
 
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.jms.core.JmsTemplate;
 import org.springframework.jms.core.MessageCreator;
 import org.springframework.stereotype.Service;
@@ -19,6 +21,8 @@ import com.github.pagehelper.PageInfo;
 import com.taotao.common.pojo.EasyUIDataGridResult;
 import com.taotao.common.pojo.TaotaoResult;
 import com.taotao.common.utils.IDUtils;
+import com.taotao.common.utils.JsonUtils;
+import com.taotao.jedis.JedisClient;
 import com.taotao.mapper.TbItemDescMapper;
 import com.taotao.mapper.TbItemMapper;
 import com.taotao.pojo.TbItem;
@@ -38,10 +42,17 @@ public class ItemServiceImpl implements ItemService {
 	@Autowired
 	private TbItemDescMapper itemDescMapper;
 	@Autowired
+	private TbItemDescMapper tbItemDescMapper;
+	@Autowired
 	private JmsTemplate jmsTemplate;
 	@Autowired
 	private Destination topicDestination;
-	
+	@Autowired
+	private JedisClient jedisClient;
+	@Value("${REDIS_ITEM_KEY}")
+	private String REDIS_ITEM_KEY;
+	@Value("${REDIS_ITEM_EXPIRE}")
+	private int REDIS_ITEM_EXPIRE;
 	
 	/*
 	 * 分业查询 
@@ -95,6 +106,55 @@ public class ItemServiceImpl implements ItemService {
 			}
 		});
 		return TaotaoResult.ok();
+	}
+	
+	@Override
+	public TbItem getItemById(long itemId) {
+		//先查询缓存
+		try {
+			String json = jedisClient.get(REDIS_ITEM_KEY+":"+itemId+":BASE");
+			if (StringUtils.isNoneBlank(json)) {
+				TbItem tbItem = JsonUtils.jsonToPojo(json, TbItem.class);
+				return tbItem;
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		//缓存没有命中，查询数据库
+		TbItem item = itemMapper.selectByPrimaryKey(itemId);
+		//添加到缓存
+		try {
+			jedisClient.set(REDIS_ITEM_KEY+":"+itemId+":BASE", JsonUtils.objectToJson(item));
+			//设置过期时间
+			jedisClient.expire(REDIS_ITEM_KEY+":"+itemId+":BASE", REDIS_ITEM_EXPIRE);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return item;
+	}
+
+	@Override
+	public TbItemDesc geTbItemDescById(long itemId) {
+		//先查询缓存
+		try {
+			String json = jedisClient.get(REDIS_ITEM_KEY+":"+itemId+":DESC");
+			if (StringUtils.isNoneBlank(json)) {
+				TbItemDesc tbItemDesc = JsonUtils.jsonToPojo(json, TbItemDesc.class);
+				return tbItemDesc;
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		TbItemDesc itemDesc = tbItemDescMapper.selectByPrimaryKey(itemId);
+		//添加到缓存
+		try {
+			jedisClient.set(REDIS_ITEM_KEY+":"+itemId+":DESC", JsonUtils.objectToJson(itemDesc));
+			//设置过期时间
+			jedisClient.expire(REDIS_ITEM_KEY+":"+itemId+":DESC", REDIS_ITEM_EXPIRE);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return itemDesc;
 	}
 	
 	
