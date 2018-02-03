@@ -19,6 +19,8 @@ public interface TbOrderItemMapper {
     List<TbOrderItem> selectByExample(TbOrderItemExample example);
 
     TbOrderItem selectByPrimaryKey(String id);
+    
+    List<TbOrderItem> selectByOrderId(String orderId);
 
     int updateByExampleSelective(@Param("record") TbOrderItem record, @Param("example") TbOrderItemExample example);
 

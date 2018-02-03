@@ -6,7 +6,7 @@
 <!--shortcut end-->
 <div id="o-header-2013">
 	<div class="w" id="header-2013">
-		<div id="logo-2013" class="ld"><a href="/" hidefocus="true" clstag="homepage|keycount|home2013|02a"><b></b><img src="/images/taotao-logo.gif" width="270" height="60" alt="淘淘"></a></div>
+		<div id="logo-2013" class="ld"><a href="http://localhost:8082" hidefocus="true" clstag="homepage|keycount|home2013|02a"><b></b><img src="/images/taotao-logo.gif" width="270" height="60" alt="淘淘"></a></div>
 		<!--logo end-->
 		<div id="search-2013">
 			<div class="i-search ld">
@@ -31,7 +31,7 @@
 		<!--my360buy end-->
 		<div id="settleup-2013" clstag="homepage|keycount|home2013|05a">
 			<dl>
-				<dt class="ld"><s></s><span class="shopping"><span id="shopping-amount"></span></span><a href="/cart/cart.html" id="settleup-url">去购物车结算</a> <b></b> </dt>
+				<dt class="ld"><s></s><span class="shopping"><span id="shopping-amount"></span></span><a href="http://localhost:8089/cart/cart.html" id="settleup-url">去购物车结算</a> <b></b> </dt>
 <!-- 				<dd>
 					<div class="prompt">
 						<div class="loading-style1"><b></b>加载中，请稍候...</div>

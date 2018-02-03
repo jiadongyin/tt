@@ -13,7 +13,7 @@ public class TestFastDfs {
 	public void testUpload() throws Exception {
 		//1.创建一个配置文件fast_dfs.conf， 配置文件的内容就是指定TrackerServer的地址
 		//2.加载配置文件
-		ClientGlobal.init("G:/java学习资料/解压文件/电商/day03/代码/taotao/taotao-manager-web/src/main/resources/resource/fast_dfs.conf");
+		ClientGlobal.init("E:/工作空间/git/taotao2018/taotao-manager-web/src/main/resources/resource/fast_dfs.conf");
 		//3.创建一个TrackerClient对象。
 		TrackerClient trackerClient = new TrackerClient();
 		//4.通过TrackerClient对象获得TrackerServer对象。

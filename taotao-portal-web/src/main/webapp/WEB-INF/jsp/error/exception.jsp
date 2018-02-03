@@ -27,7 +27,7 @@
 <body id="mainframe">
 	<div class="w w1 header clearfix">
 		<div id="logo">
-			<a href="/"><img src="/images/taotao-logo.gif" alt="淘淘商城"></a>
+			<a href="http://localhost:8082"><img src="/images/taotao-logo.gif" alt="淘淘商城"></a>
 		</div>
 	</div>
 
